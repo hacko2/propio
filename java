@@ -1,1 +1,1 @@
-You must start Java with `--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED`
+WARNING: Unknown module: org.apache.arrow.memory.core specified to --add-opens
