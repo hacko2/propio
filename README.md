@@ -1,1 +1,1 @@
-TypeError: pyspark.sql.readwriter.DataFrameReader.options() argument after ** must be a mapping, not tuple
+IllegalArgumentException: The config property 'spark.cosmos.auth.primarykey' is invalid. No config setting with this name exists.
