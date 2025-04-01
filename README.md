@@ -1,49 +1,30 @@
-function flyway_migrate () {
-    
-    salida=""
-    temp_file="/azp/agent/_work/_temp/tempErr"
-    ok "Version de FlyWay 11.2.0"
-    echo ""
-    ok "Start repair process"
-    ./flyway repair \
-        -url="$url" \
-        -user="$dbUser" \
-        -password="$dbPassword" \
-        -initSql="$flywayInitSql" \
-        -table="$flywayTableName" \
-        -locations="$flywaySqlLocation" \
-        -schemas="$flywaySchemas" \
-        -placeholders.environment="$flywayPlaceholders_environment" \
-        2>&1 | grep -vE "Flyway OSS Edition|Picked up|Flyway upgrade recommended|See release notes|QUOTED_IDENTIFIERS_IGNORE_CASE" | tee "$temp_file"
+Picked up JAVA_TOOL_OPTIONS: --add-opens=java.base/java.nio=ALL-UNNAMED
+Flyway OSS Edition 11.2.0 by Redgate
 
-    ok "End repair process"
-    echo ""
-    ok "Start migrate process"
-    ./flyway migrate \
-        -url="$url" \
-        -user="$dbUser" \
-        -password="$dbPassword" \
-        -createSchemas="$flywayCreateSchemas" \
-        -initSql="$flywayInitSql" \
-        -table="$flywayTableName" \
-        -locations="$flywaySqlLocation" \
-        -defaultSchema="$flywayDefaultSchema" \
-        -schemas="$flywaySchemas" \
-        -baselineOnMigrate="$flywayBaselineOnMigrate" \
-        -baselineVersion="$flywayBaselineVersion" \
-        -placeholders.environment="$flywayPlaceholders_environment" \
-        2>&1 | grep -vE "Flyway OSS Edition|Picked up|Flyway upgrade recommended|See release notes|QUOTED_IDENTIFIERS_IGNORE_CASE" | tee "$temp_file"
+See release notes here: https://rd.gt/416ObMi
+Apr 01, 2025 1:14:08 PM net.snowflake.client.jdbc.SnowflakeConnectionV1 initConnectionWithImpl
+INFO: Initializing new connection
+Apr 01, 2025 1:14:08 PM net.snowflake.client.jdbc.DefaultSFConnectionHandler initLogger
+INFO: Setting logger with log level OFF and log pattern %h/snowflake_jdbc%u.log
++--------------------------------------+
+| QUERY_ID                             |
++--------------------------------------+
+| 01bb6582-0305-fc6e-004f-f50270111fab |
++--------------------------------------+
 
-    # Mostrar si hubo errores después
-    if grep -qE "ERROR|FATAL" "$temp_file"; then
-        err "Errores detectados en la migración."
-        grep -E "ERROR|FATAL" "$temp_file" >&2
-        echo "##vso[task.complete result=SucceededWithIssues;]DONE"
-    else
-        ok "Migración completada con éxito."
-    fi
+QUOTED_IDENTIFIERS_IGNORE_CASE option is false
+Database: jdbc:snowflake://eo20589.west-europe.privatelink.snowflakecomputing.com:443/ (Snowflake 9.7)
+WARNING: Flyway upgrade recommended: Snowflake 9.7 is newer than this version of Flyway and support has not been tested. The latest supported version of Snowflake is 8.3.
++--------------------------------------+
+| QUERY_ID                             |
++--------------------------------------+
+| 01bb6582-0305-fc6e-004f-f50270111fcb |
++--------------------------------------+
 
-    # Remove tmp files
-    rm $temp_file
-    
-}
+Schema version: 0.0.363
+
++------------+---------+---------------------------------------------------+------+---------------------+---------+----------+
+| Category   | Version | Description                                       | Type | Installed On        | State   | Undoable |
++------------+---------+---------------------------------------------------+------+---------------------+---------+----------+
+| Versioned  | 0.0.1   | init                                              | SQL  | 2022-02-23 14:21:13 | Success | No       |
++------------+---------+---------------------------------------------------+------+---------------------+---------+----------+
